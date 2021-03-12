@@ -1,0 +1,29 @@
+{% extends 'base.html' %} 
+{% block body %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='main.css')}}">
+    <div class="wrapper">
+    <div class="background_img">
+    <div class="">
+    <div class="col-12 nbm">
+    <div class="title">
+    <span style="color:#FFFFFF;">WELCOME!</span></div>
+    <div class="txt_wrap">
+    <span style="color:#FFFFFF;">Click below to upload file:</span></div>
+    <div style="text-align: center;">
+    <table >
+     <tbody>
+     <tr>
+     <td></td>
+     <td>
+     </tr>
+     </tbody>
+    </table>
+    <input type="button" id="loadFileXml" value="Upload file" class="btn-upload" onclick="document.getElementById('file').click();" />
+    <input type="file" style="display:none;" id="file" name="file"/>
+
+    </div>
+    </div>
+    </div>
+    </div>
+  {% endblock %}  
