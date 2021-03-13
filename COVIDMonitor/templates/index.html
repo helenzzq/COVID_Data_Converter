@@ -7,9 +7,9 @@
     <div class="">
     <div class="col-12 nbm">
     <div class="title">
-    <span style="color:#FFFFFF;">WELCOME!</span></div>
+    <span style="color:#FFFFFF;">WELCOME TO COVID MONITOR!</span></div>
     <div class="txt_wrap">
-    <span style="color:#FFFFFF;">Click below to upload file:</span></div>
+    <span style="color:#FFFFFF;"></span></div>
     <div style="text-align: center;">
     <table >
      <tbody>
@@ -19,9 +19,14 @@
      </tr>
      </tbody>
     </table>
-    <input type="button" id="loadFileXml" value="Upload file" class="btn-upload" onclick="document.getElementById('file').click();" />
-    <input type="file" style="display:none;" id="file" name="file"/>
+    <form action = "http://localhost:5000/uploader" method = "POST"          enctype = "multipart/form-data">
 
+    <input type="file" id="file" class="btn-upload" name="file"/>
+    <input type="submit" style="display: none" id="submit">
+    <div style="margin-top:10px">
+    <input type="button" id="load" class="submit" value="Submit" onclick="document.getElementById('submit').click();" />
+  </div>
+  </form>
     </div>
     </div>
     </div>
