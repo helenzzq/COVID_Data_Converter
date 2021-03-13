@@ -65,7 +65,7 @@
     cursor: pointer;
     color:white;
     position: relative;
-    background-color: #108f5e;;
+    background-color: #108f5e;
     padding: 6px 12px;
     font-size: 1.4rem;
     border-radius: 2px;
@@ -84,7 +84,7 @@
     border-radius: 50px;
 }
 .submit:active {
-    background-color: #002a5c;;
+    background-color: #108f5e;;
 	top: 1px;
 	border-color: rgba(0,0,0,0.34) rgba(0,0,0,0.21) rgba(0,0,0,0.21);
 	box-shadow: 0 1px 0 rgba(255,255,255,0.89),0 1px rgba(0,0,0,0.05) inset;
