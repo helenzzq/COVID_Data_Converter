@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block body %}
+<link rel="stylesheet" href="{{url_for('static',filename='main.css')}}">
+	{% with alert = get_flashed_messages() %}
+	  {% if alert %}
+	    {% for msg in alert %}
+			{{msg}}
+		  </div>
+		{% endfor %}
+	  {% endif %}
+	{% endwith %}
+    <div class="wrapper">
+    <div class="background_img">
+    <div class="">
+    <div class="col-12 nbm">
+    <div class="title">
+    <span style="color:#FFFFFF;">WELCOME TO COVID MONITOR!</span></div>
+    <div class="txt_wrap">
+    <span style="color:#FFFFFF;"></span></div>
+    <div style="text-align: center;">
+    <table >
+     <tbody>
+     <tr>
+     <td></td>
+     <td>
+     </tr>
+     </tbody>
+    </table>
+    <form action = "http://localhost:5000/upload" method = "POST"   enctype = "multipart/form-data">
+
+    <input type="file" id="file" class="btn-upload" name="file"/>
+    <input type="submit" style="display: none" id="submit">
+    <div style="margin-top:10px">
+    <input type="button" id="load" class="submit" value="Submit" onclick="document.getElementById('submit').click();" />
+  </div>
+  </form>
+    </div>
+    </div>
+    </div>
+    </div>
+  {% endblock %}  
