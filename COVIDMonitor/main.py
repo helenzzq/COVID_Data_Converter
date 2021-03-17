@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, flash
 import os
 from werkzeug.utils import secure_filename
 
@@ -8,6 +8,8 @@ if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
+
+app.secret_key = 'csc301/team1'
 
 
 @app.route("/")
@@ -26,7 +28,10 @@ def upload():
             if extension.lower() == "csv":
                 # Duplicate file will be replaced directly
                 f.save(os.path.join(app.config['DIR'], secure_filename(f.filename)))
-                return "File is upload correctly"
+                flash("File is uploaded successfully")
+            else:
+                flash("This uploaded file is not in csv format. Please upload in the right format")
+            return render_template('index.html')
 
     return "File does not upload"
 

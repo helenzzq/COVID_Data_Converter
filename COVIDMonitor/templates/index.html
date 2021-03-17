@@ -1,7 +1,14 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block body %}
-
 <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}">
+	{% with alert = get_flashed_messages() %}
+	  {% if alert %}
+	    {% for msg in alert %}
+			{{msg}}
+		  </div>
+		{% endfor %}
+	  {% endif %}
+	{% endwith %}
     <div class="wrapper">
     <div class="background_img">
     <div class="">
