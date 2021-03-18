@@ -76,3 +76,5 @@ class DataPoint:
 
     def set_combined_key(self, combined_key):
         self.combined_key = combined_key
+    def set_admin(self, admin):
+        self.admin = admin
