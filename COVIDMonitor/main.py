@@ -1,4 +1,4 @@
-from COVIDMonitor.dataparser import DataParser
+from dataparser import DataParser
 from flask import Flask, request, render_template, url_for, flash
 import os
 from werkzeug.utils import secure_filename
@@ -24,21 +24,15 @@ def parse_data(path, isUSData, isTimeSeries):
     
     parser = DataParser()
     parsed_records = []
-    # US COVID data in TimeSeries csv file format
-    if isUSData and isTimeSeries:
-        parsed_records = parser.parse_us_covid_timeseries(path)
 
-    # US COVID data in regular csv file format
-    elif isUSData and not isTimeSeries:
-        parsed_records = parser.parse_us_covid_regular_data(path)
+    # COVID data in TimeSeries csv file format
+    if isTimeSeries:
+        parsed_records = parser.parse_covid_timeseries(path)
 
-    # Global COVID data in TimeSeries csv file format
-    elif not isUSData and isTimeSeries:
-        parsed_records = parser.parse_global_covid_timeseries(path)
-    
-    # Global COVID data in regular csv file format
+
+    # COVID data in Daily Report csv file format
     else:
-        parsed_records = parser.parse_global_covid_regular_data(path)
+        parsed_records = parser.parse_covid_daily_report(path)
 
     records.extend(parsed_records)
 
@@ -59,7 +53,7 @@ def upload():
                 flash("This uploaded file is not in csv format. Please upload in the right format")
             return render_template('index.html')
 
-    return "File does not upload"
+    return "User Does not submit any source data"
 
 
 if __name__ == "__main__":
