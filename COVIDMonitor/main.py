@@ -69,15 +69,16 @@ def upload():
     parsed_records = {} # key: datetime, Value: datapoint
     try:
         parsed_records = parse_data(path, is_time_series)
-    except RuntimeError as err:
-        print(err)
+    except:
         return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
     
     for datetime in parsed_records:
         for dp in parsed_records[datetime]:
             update(datamap, dp)
 
-    print(datamap)
+    # for datetime in datamap:
+    #     for dp in datamap[datetime]:
+    #         print(dp)
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
 
@@ -86,7 +87,7 @@ def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
     if not dp.datetime:
         return
     if dp.country_region == dp.province_state:
-        print(dp)
+        print("repeated", dp)
         return
     
     # same_day_recs = datamap.setdefault(dp.datetime, [])
@@ -94,7 +95,7 @@ def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
         datamap[dp.datetime] = []
 
     for curr_dp in datamap[dp.datetime]:
-        if (curr_dp.country_region == dp.country_regionand and
+        if (curr_dp.country_region == dp.country_region and
             curr_dp.province_state == dp.province_state):
             if dp.active != -1:
                 curr_dp.active = dp.active
