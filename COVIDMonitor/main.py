@@ -1,8 +1,10 @@
+from COVIDMonitor.dataparser import DataParser
 from flask import Flask, request, render_template, url_for, flash
 import os
 from werkzeug.utils import secure_filename
 
 UPLOAD_DIR = "data"
+
 # Check if upload dir exist
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
@@ -11,10 +13,34 @@ app.config['DIR'] = UPLOAD_DIR
 
 app.secret_key = 'csc301/team1'
 
+# Data records
+records = []
 
 @app.route("/")
 def main():
     return render_template('index.html')
+
+def parse_data(path, isUSData, isTimeSeries):
+    
+    parser = DataParser()
+    parsed_records = []
+    # US COVID data in TimeSeries csv file format
+    if isUSData and isTimeSeries:
+        parsed_records = parser.parse_us_covid_timeseries(path)
+
+    # US COVID data in regular csv file format
+    elif isUSData and not isTimeSeries:
+        parsed_records = parser.parse_us_covid_regular_data(path)
+
+    # Global COVID data in TimeSeries csv file format
+    elif not isUSData and isTimeSeries:
+        parsed_records = parser.parse_global_covid_timeseries(path)
+    
+    # Global COVID data in regular csv file format
+    else:
+        parsed_records = parser.parse_global_covid_regular_data(path)
+
+    records.extend(parsed_records)
 
 
 @app.route("/upload", methods=['GET', 'POST'])
