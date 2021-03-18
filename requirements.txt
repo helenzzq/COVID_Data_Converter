@@ -1,0 +1,5 @@
+flask
+Werkzeug
+pandas
+pytest
+pytest-cov

@@ -8,18 +8,20 @@ These instructions will get a copy of the assignment starter template up and run
 
 You must have Python-3 and a package manager [pip] installed on your computer 
 
-Additionally you will need to install the following packages: 
+Additionally you will need to install the dependencies: 
 
 ```bash
-pip install flask
-pip install pytest
-pip install pytest-cov
+pip install -r requirements.txt
 ```
+
+### Data constraints
+- Must specify date in "MM-DD-YY"
+- If US data, must contain "us" in filename
+- If timeseries data, must contain "timeseries" in filename
 
 ### Running The Code
 
 You can start by running main.py, which is in the folder COVIDMonitor. main.py has the main method that will start the program. 
-
 
 ```bash
 python main.py
