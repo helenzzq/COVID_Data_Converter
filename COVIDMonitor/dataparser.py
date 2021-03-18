@@ -1,4 +1,4 @@
-from COVIDMonitor.datapoint import DataPoint
+from datapoint import DataPoint
 from typing import List,Dict
 import pandas as pd
 import ntpath
@@ -7,6 +7,8 @@ import ntpath
 
 TIME_SERIES = ["Province/State", "Country/Region"]
 DETAILED = ["Province/State", "Country/Region", "Combined_Key", "Active", "Confirmed", "Deaths", "Recovered"]
+
+US_DATA_INDICATOR = "us"
 
 DEATHS = "deaths"
 RECOVERED = "recovered"
@@ -39,8 +41,8 @@ def check_data_catego(dp, csv_name, data, is_us) -> None:
 class DataParser:
     """
     Strategy pattern for parsing the following types of data:
-      - US COVID Timeseries
-      - GLOBAL COVID Timeseries
+      - US COVID time_series
+      - GLOBAL COVID time_series
       - US COVID regular data
       - GLOBAL COVID regular data
     """
@@ -48,10 +50,10 @@ class DataParser:
         super().__init__()
 
     @classmethod
-    def parse_covid_timeseries(self, path) -> Dict[str, DataPoint]:
+    def parse_covid_time_series(self, path) -> Dict[str, DataPoint]:
         """Return Parsed Time series data as a Hashmap"""
         csv_name = ntpath.basename(path)
-        is_us = "us" in csv_name
+        is_us = US_DATA_INDICATOR in csv_name.lower()
         covid_data = pd.read_csv(path)
         col = list(covid_data.columns)
         df = pd.read_csv(path, usecols=TIME_SERIES)
