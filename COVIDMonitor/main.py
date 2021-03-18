@@ -66,16 +66,16 @@ def upload():
 
     is_time_series = True if TIME_SERIES_DATA_INDICATOR in f.filename.lower() else False
 
-    parsed_records = []
+    parsed_records = {} # key: datetime, Value: datapoint
     try:
         parsed_records = parse_data(path, is_time_series)
     except RuntimeError as err:
         print(err)
         return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
     
-    for dp in parsed_records:
-        print("dp", dp)
-        update(datamap, dp)
+    for datetime in parsed_records:
+        for dp in parsed_records[datetime]:
+            update(datamap, dp)
 
     print(datamap)
     flash("File is uploaded successfully")
@@ -86,12 +86,14 @@ def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
     if not dp.datetime:
         return
     if dp.country_region == dp.province_state:
+        print(dp)
         return
     
-    same_day_recs = datamap.setdefault(dp.datetime, [])
-    
+    # same_day_recs = datamap.setdefault(dp.datetime, [])
+    if dp.datetime not in datamap:
+        datamap[dp.datetime] = []
 
-    for curr_dp in same_day_recs:
+    for curr_dp in datamap[dp.datetime]:
         if (curr_dp.country_region == dp.country_regionand and
             curr_dp.province_state == dp.province_state):
             if dp.active != -1:
@@ -105,7 +107,7 @@ def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
             return # Updated the datapoint
     
     # dp is a completely new entry
-    same_day_recs.append(dp)
+    datamap[dp.datetime].append(dp)
     return
 
 if __name__ == "__main__":
