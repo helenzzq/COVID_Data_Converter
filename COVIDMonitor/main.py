@@ -17,6 +17,8 @@ if not os.path.exists(UPLOAD_DIR):
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
 
+data =DataParser()
+
 app.secret_key = 'csc301/team1'
 
 # Data map: key=date, value=datapoint
