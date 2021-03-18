@@ -16,8 +16,7 @@ pip install -r requirements.txt
 
 ### Data constraints
 - Must specify date in "MM-DD-YY"
-- If US data, must contain "us" in filename
-- If timeseries data, must contain "timeseries" in filename
+- If timeseries data, must contain "time_series" in filename
 
 ### Running The Code
 

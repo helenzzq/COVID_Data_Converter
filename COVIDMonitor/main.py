@@ -8,8 +8,8 @@ from http import HTTPStatus
 from typing import List, Dict
 
 UPLOAD_DIR = "data"
-US_DATA_INDICATOR = "us"
-TIMESERIES_DATA_INDICATOR = "timeseries"
+
+TIME_SERIES_DATA_INDICATOR = "time_series"
 
 # Check if upload dir exist
 if not os.path.exists(UPLOAD_DIR):
@@ -29,19 +29,15 @@ def main():
     #TODO: Clear local cached files
     return render_template('index.html')
 
-def parse_data(path, is_us_data, is_time_series):
+def parse_data(path, is_time_series):
     
-    parser = DataParser()
     parsed_records = []
+    parser = DataParser()
 
-    if is_us_data and is_time_series: # US COVID data in TimeSeries csv file format
-        parsed_records = parser.parse_us_covid_timeseries(path)
-    elif is_us_data and not is_time_series: # US COVID data in regular csv file format
-        parsed_records = parser.parse_us_covid_regular_data(path)
-    elif not is_us_data and is_time_series: # Global COVID data in TimeSeries csv file format
-        parsed_records = parser.parse_global_covid_timeseries(path)    
-    else: # Global COVID data in regular csv file format
-        parsed_records = parser.parse_global_covid_regular_data(path)
+    if is_time_series:  # COVID data in time series csv file format
+        parsed_records = parser.parse_covid_time_series(path) 
+    else:               # Global COVID data in regular csv file format
+        parsed_records = parser.parse_covid_daily_report(path)
 
     return parsed_records
 
@@ -69,14 +65,14 @@ def upload():
     except:
         return "cannot save file", HTTPStatus.INTERNAL_SERVER_ERROR
 
-    is_us_data = True if US_DATA_INDICATOR in f.filename else False
-    is_time_series = True if TIMESERIES_DATA_INDICATOR else False
+    is_time_series = True if TIME_SERIES_DATA_INDICATOR in f.filename.lower() else False
 
     parsed_records = []
-    # try:
-    #     parsed_records = parse_data(path, is_us_data, is_time_series)
-    # except:
-    #     return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
+    try:
+        parsed_records = parse_data(path, is_time_series)
+    except RuntimeError as err:
+        print(err)
+        return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
     
     for dp in parsed_records:
         update(datamap, dp)
