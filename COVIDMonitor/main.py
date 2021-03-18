@@ -1,7 +1,9 @@
-from dataparser import DataParser
-from flask import Flask, request, render_template, url_for, flash
+from COVIDMonitor.dataparser import DataParser
+
+from flask import Flask, request, render_template, url_for, flash, jsonify
 import os
 from werkzeug.utils import secure_filename
+from http import HTTPStatus
 
 UPLOAD_DIR = "data"
 
@@ -11,6 +13,8 @@ if not os.path.exists(UPLOAD_DIR):
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
 
+data =DataParser()
+
 app.secret_key = 'csc301/team1'
 
 # Data records
@@ -18,11 +22,11 @@ records = []
 
 @app.route("/")
 def main():
-    return render_template('index.html')
+    return render_template('index.html'),200
 
 def parse_data(path, isUSData, isTimeSeries):
     
-    parser = DataParser()
+    parser = dataparser.DataParser()
     parsed_records = []
 
     # COVID data in TimeSeries csv file format
@@ -51,9 +55,9 @@ def upload():
                 flash("File is uploaded successfully")
             else:
                 flash("This uploaded file is not in csv format. Please upload in the right format")
-            return render_template('index.html')
+            return render_template('index.html'),200
 
-    return "User Does not submit any source data"
+    return render_template('index.html'),400
 
 
 if __name__ == "__main__":

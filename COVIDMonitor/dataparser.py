@@ -1,5 +1,5 @@
-from datapoint import DataPoint
-from typing import Dict
+from COVIDMonitor.datapoint import DataPoint
+from typing import List,Dict
 import pandas as pd
 import ntpath
 
@@ -44,6 +44,8 @@ class DataParser:
       - US COVID regular data
       - GLOBAL COVID regular data
     """
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def parse_covid_timeseries(self, path) -> Dict[str, DataPoint]:
@@ -52,12 +54,14 @@ class DataParser:
         is_us = "us" in csv_name
         covid_data = pd.read_csv(path)
         col = list(covid_data.columns)
-        df = pd.read_csv(path, TIME_SERIES)
-        date_col = [convert_date_format(c) for c in col if c[0].isnumeric()]
+        df = pd.read_csv(path, usecols=TIME_SERIES)
+        date_col = [c for c in col if c[0].isnumeric()]
         row_num = df.shape[0]
         hash_map = dict()
         for date in date_col:
             data = covid_data[date]
+            date = convert_date_format(date)
+            hash_map[date] = []
             for i in range(row_num):
                 dp = DataPoint(date, df["Country/Region"][i], df["Province/State"][i])
                 check_data_catego(dp, csv_name, data[i], is_us)
@@ -73,12 +77,13 @@ class DataParser:
         is_us = COMBINED_KEY in col
         if is_us:
             DETAILED.remove(COMBINED_KEY)
-        df = pd.read_csv(path, DETAILED)
+        df = pd.read_csv(path, usecols=DETAILED)
         temp = csv_name.split(".")[0].split("-")
         temp[2] = temp[2][2:]
         date = '-'.join(temp)
         row_num = df.shape[0]
         hash_map = dict()
+        hash_map[date] =[]
         for i in range(row_num):
             dp = DataPoint(date, df[DETAILED[0]][i], df[DETAILED[1]][i], df[DETAILED[2]][i],
                            df[DETAILED[3]][i], df[DETAILED[4]][i], df[DETAILED[5]][i])
