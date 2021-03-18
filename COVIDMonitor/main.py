@@ -8,17 +8,16 @@ from http import HTTPStatus
 from typing import List, Dict
 
 UPLOAD_DIR = "data"
-
-TIME_SERIES_DATA_INDICATOR = "time_series"
-
 # Check if upload dir exist
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
+
+TIME_SERIES_DATA_INDICATOR = "time_series"
+
+
+
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
-
-data =DataParser()
-
 app.secret_key = 'csc301/team1'
 
 # Data map: key=date, value=datapoint
@@ -75,13 +74,38 @@ def upload():
         return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
     
     for dp in parsed_records:
+        print("dp", dp)
         update(datamap, dp)
 
+    print(datamap)
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
 
 
 def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
+    if not dp.datetime:
+        return
+    if dp.country_region == dp.province_state:
+        return
+    
+    same_day_recs = datamap.setdefault(dp.datetime, [])
+    
+
+    for curr_dp in same_day_recs:
+        if (curr_dp.country_region == dp.country_regionand and
+            curr_dp.province_state == dp.province_state):
+            if dp.active != -1:
+                curr_dp.active = dp.active
+            if dp.confirmed != -1:
+                curr_dp.confirmed = dp.confirmed
+            if dp.deaths != -1:
+                curr_dp.deaths = dp.deaths
+            if dp.recovered != -1:
+                curr_dp.recovered = dp.recovered
+            return # Updated the datapoint
+    
+    # dp is a completely new entry
+    same_day_recs.append(dp)
     return
 
 if __name__ == "__main__":

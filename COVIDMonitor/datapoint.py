@@ -40,8 +40,8 @@ class DataPoint:
     deaths: int
     recovered: int
 
-    def __init__(
-            self, datetime="",
+    def __init__(self,
+            datetime="",
             country_region="",
             province_state="",
             combined_key="",
@@ -50,7 +50,6 @@ class DataPoint:
             confirmed=-1,
             deaths=-1,
             recovered=-1,
-
     ) -> None:
         self.datetime = datetime
         self.country_region = country_region
