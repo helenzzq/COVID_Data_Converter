@@ -1,4 +1,4 @@
-from COVIDMonitor.datapoint import DataPoint
+from datapoint import DataPoint
 from typing import List,Dict
 import pandas as pd
 import ntpath

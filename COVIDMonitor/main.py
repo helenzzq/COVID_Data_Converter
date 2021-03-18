@@ -8,17 +8,16 @@ from http import HTTPStatus
 from typing import List, Dict
 
 UPLOAD_DIR = "data"
-
-TIME_SERIES_DATA_INDICATOR = "time_series"
-
 # Check if upload dir exist
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
+
+TIME_SERIES_DATA_INDICATOR = "time_series"
+
+
+
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
-
-data =DataParser()
-
 app.secret_key = 'csc301/team1'
 
 # Data map: key=date, value=datapoint
@@ -67,21 +66,49 @@ def upload():
 
     is_time_series = True if TIME_SERIES_DATA_INDICATOR in f.filename.lower() else False
 
-    parsed_records = []
+    parsed_records = {} # key: datetime, Value: datapoint
     try:
         parsed_records = parse_data(path, is_time_series)
-    except RuntimeError as err:
-        print(err)
+    except:
         return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
     
-    for dp in parsed_records:
-        update(datamap, dp)
+    for datetime in parsed_records:
+        for dp in parsed_records[datetime]:
+            update(datamap, dp)
 
+    # for datetime in datamap:
+    #     for dp in datamap[datetime]:
+    #         print(dp)
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
 
 
 def update(datamap: Dict[str, DataPoint], dp: DataPoint) -> None:
+    if not dp.datetime:
+        return
+    if dp.country_region == dp.province_state:
+        print("repeated", dp)
+        return
+    
+    # same_day_recs = datamap.setdefault(dp.datetime, [])
+    if dp.datetime not in datamap:
+        datamap[dp.datetime] = []
+
+    for curr_dp in datamap[dp.datetime]:
+        if (curr_dp.country_region == dp.country_region and
+            curr_dp.province_state == dp.province_state):
+            if dp.active != -1:
+                curr_dp.active = dp.active
+            if dp.confirmed != -1:
+                curr_dp.confirmed = dp.confirmed
+            if dp.deaths != -1:
+                curr_dp.deaths = dp.deaths
+            if dp.recovered != -1:
+                curr_dp.recovered = dp.recovered
+            return # Updated the datapoint
+    
+    # dp is a completely new entry
+    datamap[dp.datetime].append(dp)
     return
 
 if __name__ == "__main__":

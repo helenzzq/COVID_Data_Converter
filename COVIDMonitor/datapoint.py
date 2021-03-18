@@ -40,8 +40,8 @@ class DataPoint:
     deaths: int
     recovered: int
 
-    def __init__(
-            self, datetime="",
+    def __init__(self,
+            datetime="",
             country_region="",
             province_state="",
             combined_key="",
@@ -50,17 +50,16 @@ class DataPoint:
             confirmed=-1,
             deaths=-1,
             recovered=-1,
-
     ) -> None:
         self.datetime = datetime
         self.country_region = country_region
         self.province_state = province_state
         self.combined_key = combined_key
+        self.admin = admin
         self.active = active
         self.confirmed = confirmed
         self.deaths = deaths
         self.recovered = recovered
-        self.admin = admin
 
     def set_confirmed(self, confirmed):
         self.confirmed = confirmed
@@ -76,5 +75,14 @@ class DataPoint:
 
     def set_combined_key(self, combined_key):
         self.combined_key = combined_key
+
     def set_admin(self, admin):
         self.admin = admin
+
+    def __str__(self) -> str:
+            tup = (
+                self.datetime,
+                self.country_region, self.province_state, self.admin, self.combined_key, 
+                self.active, self.confirmed, self.deaths, self.recovered
+                )
+            return str(tup)
