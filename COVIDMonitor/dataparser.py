@@ -6,10 +6,10 @@ import ntpath
 # Combined_Key only appear in time_series us
 TIME_SERIES_US = ["Country_Region","Province_State"]
 TIME_SERIES = [ "Country/Region","Province/State"]
-DETAILED = ["Province/State", "Country/Region", "Combined_Key", "Active", "Confirmed", "Deaths", "Recovered"]
+DETAILED = ["Province/State", "Country/Region", "Combined_Key", "Admin2","Active", "Confirmed", "Deaths", "Recovered"]
 
 US_DATA_INDICATOR = "us"
-
+ADMIN = "Admin2"
 DEATHS = "deaths"
 RECOVERED = "recovered"
 ACTIVE = "active"
@@ -70,7 +70,7 @@ class DataParser:
             date = convert_date_format(date)
             hash_map[date] = []
             for i in range(row_num):
-                dp = DataPoint(date, df[country_prov_cols[0]][i], df[country_prov_cols[0]][i])
+                dp = DataPoint(date, df[country_prov_cols[0]][i], df[country_prov_cols[1]][i])
                 check_data_catego(dp, csv_name, data[i], is_us)
                 hash_map[date].append(dp)
         return hash_map
@@ -84,6 +84,8 @@ class DataParser:
         is_us = COMBINED_KEY in col
         if is_us:
             DETAILED.remove(COMBINED_KEY)
+            DETAILED.remove(ADMIN)
+            DETAILED[0],DETAILED[1]=TIME_SERIES_US[0],TIME_SERIES_US[1]
         df = pd.read_csv(path, usecols=DETAILED)
         temp = csv_name.split(".")[0].split("-")
         temp[2] = temp[2][2:]
@@ -92,10 +94,12 @@ class DataParser:
         hash_map = dict()
         hash_map[date] =[]
         for i in range(row_num):
-            dp = DataPoint(date, df[DETAILED[0]][i], df[DETAILED[1]][i], df[DETAILED[2]][i],
-                           df[DETAILED[3]][i], df[DETAILED[4]][i], df[DETAILED[5]][i])
+            dp = DataPoint(date,df[DETAILED[0]][i],df[DETAILED[1]][i],'',
+                           '',df[DETAILED[2]][i],df[DETAILED[3]][i],df[DETAILED[4]][i],df[DETAILED[5]][i])
             # If us, no combined key column
             if not is_us:
-                dp.set_combined_key(df[DETAILED[6]][i])
+                dp.set_combined_key(df[COMBINED_KEY][i])
+                dp.set_admin(df[ADMIN][i])
             hash_map[date].append(dp)
+        print(hash_map[date][0].admin)
         return hash_map
