@@ -75,11 +75,14 @@ class DataPoint:
 
     def set_combined_key(self, combined_key):
         self.combined_key = combined_key
-      
+
+    def set_admin(self, admin):
+        self.admin = admin
+
     def __str__(self) -> str:
-        tup = (
-            self.datetime,
-            self.country_region, self.province_state, self.admin, self.combined_key, 
-            self.active, self.confirmed, self.deaths, self.recovered
-            )
-        return str(tup)
+            tup = (
+                self.datetime,
+                self.country_region, self.province_state, self.admin, self.combined_key, 
+                self.active, self.confirmed, self.deaths, self.recovered
+                )
+            return str(tup)
