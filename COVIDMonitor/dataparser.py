@@ -6,8 +6,8 @@ import ntpath
 # Combined_Key only appear in time_series us
 TIME_SERIES_US = ["Country_Region","Province_State"]
 TIME_SERIES = [ "Country/Region","Province/State"]
-DETAILED = ["Province/State", "Country/Region", "Combined_Key", "Admin2","Active", "Confirmed", "Deaths", "Recovered"]
-
+DETAILED_GLOBAL = [ "Country_Region","Province_State","Active", "Confirmed", "Deaths", "Recovered","Combined_Key", "Admin2"]
+DETAILED_US = [ "Country_Region","Province_State","Active", "Confirmed", "Deaths", "Recovered"]
 US_DATA_INDICATOR = "us"
 ADMIN = "Admin2"
 DEATHS = "deaths"
@@ -81,12 +81,12 @@ class DataParser:
         csv_name = ntpath.basename(path)
         covid_data = pd.read_csv(path)
         col = list(covid_data.columns)
-        is_us = COMBINED_KEY in col
+        is_us = COMBINED_KEY not in col
+        target_col = DETAILED_GLOBAL
         if is_us:
-            DETAILED.remove(COMBINED_KEY)
-            DETAILED.remove(ADMIN)
-            DETAILED[0],DETAILED[1]=TIME_SERIES_US[0],TIME_SERIES_US[1]
-        df = pd.read_csv(path, usecols=DETAILED)
+            target_col = DETAILED_US
+        df = pd.read_csv(path, usecols=target_col)
+            
         temp = csv_name.split(".")[0].split("-")
         temp[2] = temp[2][2:]
         date = '-'.join(temp)
@@ -94,8 +94,8 @@ class DataParser:
         hash_map = dict()
         hash_map[date] =[]
         for i in range(row_num):
-            dp = DataPoint(date,df[DETAILED[0]][i],df[DETAILED[1]][i],'',
-                           '',df[DETAILED[2]][i],df[DETAILED[3]][i],df[DETAILED[4]][i],df[DETAILED[5]][i])
+            dp = DataPoint(date,df[target_col[0]][i],df[target_col[1]][i],'',
+                           '',df[target_col[2]][i],df[target_col[3]][i],df[target_col[4]][i],df[target_col[5]][i])
             # If us, no combined key column
             if not is_us:
                 dp.set_combined_key(df[COMBINED_KEY][i])
