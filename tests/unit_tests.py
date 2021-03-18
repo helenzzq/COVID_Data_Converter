@@ -1,7 +1,7 @@
 from COVIDMonitor.main import app
 from COVIDMonitor.dataparser import DataParser
-from COVIDMonitor.dataparser import DataPoint
-import unittest, random, ntpath
+from COVIDMonitor.datapoint import DataPoint
+import unittest, random
 
 
 def test_monitor():
@@ -94,16 +94,6 @@ class TestParser(unittest.TestCase):
         self.assertNotEqual(TS_US_Deaths[random_date][0].deaths, -1)
         self.assertNotEqual(TS_GLOBAL_CONF[random_date][0].confirmed, -1)
 
-    def test_daily_report_combined_key(self):
-        """Test if we input the write combined_key value for each type of time series
-        Global time series data has no combined_key column
-        """
-        index = random.randint(0, 2)
-        dp_global = list(DR_GLOBAL_PARSED.values())[0][index]
-        dp_us = list(DR_US_PARSED.values())[0][index]
-        self.assertNotEqual(dp_global.combined_key, '', "Combined_Key Column should be in in Global Daily report data")
-        self.assertEqual(dp_us.combined_key, '', "Combined_Key Column should not be in US Daily report data")
-
     def test_time_series_confirmed(self):
         expected_dp = [DataPoint('01-22-20', "Afghanistan", "", confirmed=0),
                        DataPoint('01-22-20', "Albania", "", confirmed=0),
@@ -155,3 +145,13 @@ class TestParser(unittest.TestCase):
             self.assertEqual(expected_dp[k].province_state, dp[k].province_state, "Province  does not match")
             self.assertEqual(expected_dp[k].country_region, dp[k].country_region, "Country  does not match")
             self.assertEqual(expected_dp[k].combined_key, dp[k].combined_key, "Combined Key  does not match")
+
+    def test_daily_report_admin_combined_key(self):
+        """Test if we input the write combined_key value for each type of time series
+        Global time series data has no combined_key and admin2 column
+        """
+        index = random.randint(0, 2)
+        dp_global = list(DR_GLOBAL_PARSED.values())[0][index]
+        dp_us = list(DR_US_PARSED.values())[0][index]
+        self.assertNotEqual(dp_global.combined_key, '', "Combined_Key Column should be in in Global Daily report data")
+        self.assertEqual(dp_us.combined_key, '', "Combined_Key Column should not be in US Daily report data")
