@@ -1,11 +1,11 @@
-from datapoint import DataPoint
+from COVIDMonitor.datapoint import DataPoint
 from typing import List,Dict
 import pandas as pd
 import ntpath
 
 # Combined_Key only appear in time_series us
-
-TIME_SERIES = ["Province/State", "Country/Region"]
+TIME_SERIES_US = ["Country_Region","Province_State"]
+TIME_SERIES = [ "Country/Region","Province/State"]
 DETAILED = ["Province/State", "Country/Region", "Combined_Key", "Active", "Confirmed", "Deaths", "Recovered"]
 
 US_DATA_INDICATOR = "us"
@@ -56,7 +56,12 @@ class DataParser:
         is_us = US_DATA_INDICATOR in csv_name.lower()
         covid_data = pd.read_csv(path)
         col = list(covid_data.columns)
-        df = pd.read_csv(path, usecols=TIME_SERIES)
+        
+        country_prov_cols = TIME_SERIES
+        if(is_us):
+            country_prov_cols = TIME_SERIES_US
+
+        df = pd.read_csv(path, usecols=country_prov_cols)
         date_col = [c for c in col if c[0].isnumeric()]
         row_num = df.shape[0]
         hash_map = dict()
@@ -65,7 +70,7 @@ class DataParser:
             date = convert_date_format(date)
             hash_map[date] = []
             for i in range(row_num):
-                dp = DataPoint(date, df["Country/Region"][i], df["Province/State"][i])
+                dp = DataPoint(date, df[country_prov_cols[0]][i], df[country_prov_cols[0]][i])
                 check_data_catego(dp, csv_name, data[i], is_us)
                 hash_map[date].append(dp)
         return hash_map
