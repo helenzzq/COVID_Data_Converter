@@ -1,5 +1,5 @@
-from datapoint import DataPoint
-from dataparser import DataParser
+from COVIDMonitor.datapoint import DataPoint
+from COVIDMonitor.dataparser import DataParser
 
 import os
 from flask import Flask, request, render_template, url_for, flash, jsonify
