@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ```
 
 ### Data constraints
-- Must specify date in "MM-DD-YY"
+- Must specify date in "MM-DD-YYYY"
 - Please upload the data as the specified format given by the handout.
 - If you want to upload time series data, must contain "time_series" in filename
 
