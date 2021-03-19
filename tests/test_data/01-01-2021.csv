@@ -1,0 +1,4 @@
+FIPS,Admin2,Province_State,Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Combined_Key,Incident_Rate,Case_Fatality_Ratio
+,Capital Territory,Australian Capital Territory,Australia,2021-01-02 05:22:33,-35.4735,149.0124,118,3,114,1,"Australian Capital Territory, Australia",27.563653352020600,2.542372881355930
+,South Wales,New South Wales,Australia,2021-01-02 05:22:33,-33.8688,151.2093,4947,54,0,1696,"New South Wales, Australia",60.93865484109390,1.0915706488781100
+,Northern Territory,Northern Territory,Australia,2021-01-02 05:22:33,-12.4634,130.8456,75,0,71,4,"Northern Territory, Australia",30.537459283387600,0.0
