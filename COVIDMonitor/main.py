@@ -55,14 +55,17 @@ def upload():
     else:
         return "invalid filename", HTTPStatus.BAD_REQUEST
 
-    path = ""
+    path = None
     if extension.lower() == "csv":  # Check if the file is in  csv format
         # Duplicate file will be replaced directly
         path = os.path.join(app.config['DIR'], secure_filename(f.filename))
     else:
         return "file format not supported", HTTPStatus.BAD_REQUEST
-
-    f.save(path)
+    
+    try:
+        f.save(path)
+    except:
+        return "fail to store file in server", HTTPStatus.INTERNAL_SERVER_ERROR
 
     is_time_series = True if TIME_SERIES_DATA_INDICATOR in f.filename.lower() else False
 
