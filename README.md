@@ -1,14 +1,14 @@
-# Assignment 2 Starter Template 
+# Assignment 2 Starter Template
 
-## Getting Started 
+## Getting Started
 
-These instructions will get a copy of the assignment starter template up and running on your local machine. 
+These instructions will get a copy of the assignment starter template up and running on your local machine.
 
 ### Prerequisites
 
-You must have Python-3 and a package manager [pip] installed on your computer 
+You must have Python-3 and a package manager [pip] installed on your computer
 
-Additionally you will need to install the dependencies: 
+Additionally you will need to install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -20,13 +20,13 @@ pip install -r requirements.txt
 
 ### Running The Code
 
-You can start by running main.py, which is in the folder COVIDMonitor. main.py has the main method that will start the program. 
+You can start by running main.py, which is in the folder COVIDMonitor. main.py has the main method that will start the program.
 
 ```bash
-python main.py
+python3 -m COVIDMonitor.main.py
 ```
 
-## Running Tests 
+## Running Tests
 
 A starter template for unit tests can be found under tests/unit_tests.py
 

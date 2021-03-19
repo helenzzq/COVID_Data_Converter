@@ -1,4 +1,4 @@
-import os,shutil
+import os
 from .datapoint import DataPoint
 from .dataparser import DataParser
 from flask import Flask, request, render_template, url_for, flash, jsonify
@@ -21,6 +21,7 @@ app.secret_key = 'csc301/team1'
 datamap = dict()
 if not os.path.exists(UPLOAD_DIR):
     os.mkdir(UPLOAD_DIR)
+
 
 @app.route("/")
 def main():
@@ -61,10 +62,7 @@ def upload():
     else:
         return "file format not supported", HTTPStatus.BAD_REQUEST
 
-    try:
-        f.save(path)
-    except:
-        return "cannot save file", HTTPStatus.INTERNAL_SERVER_ERROR
+    f.save(path)
 
     is_time_series = True if TIME_SERIES_DATA_INDICATOR in f.filename.lower() else False
 
