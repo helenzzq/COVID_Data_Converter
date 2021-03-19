@@ -1,4 +1,4 @@
-import os
+import os,shutil
 from .datapoint import DataPoint
 from .dataparser import DataParser
 from flask import Flask, request, render_template, url_for, flash, jsonify
@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from http import HTTPStatus
 from typing import List, Dict
 
-UPLOAD_DIR = "data"
+UPLOAD_DIR = "COVIDMonitor/data"
 # Check if upload dir exist
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
@@ -19,11 +19,16 @@ app.secret_key = 'csc301/team1'
 
 # Data map: key=date, value=datapoint
 datamap = dict()
-
+if not os.path.exists(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
 
 @app.route("/")
 def main():
-    # TODO: Clear local cached files
+    # Clear Cashed Data
+    for file in os.listdir(UPLOAD_DIR):
+        path = os.path.join(UPLOAD_DIR, file)
+        if os.path.isfile(path) or os.path.islink(path):
+            os.unlink(path)
     return render_template('index.html')
 
 
