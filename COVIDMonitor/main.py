@@ -12,6 +12,7 @@ if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 
 TIME_SERIES_DATA_INDICATOR = "time_series"
+URL_PARAMS = ['start', 'end', 'country_region', 'province_state', 'combined_key']
 
 app = Flask(__name__)
 app.config['DIR'] = UPLOAD_DIR
@@ -113,6 +114,32 @@ def update(datamap: Dict[str, List[DataPoint]], dp: DataPoint) -> None:
     # dp is a completely new entry
     datamap[dp.datetime].append(dp)
     return
+
+
+def parse_url_params(args):
+    return [args.get(p, "") for p in URL_PARAMS]
+
+
+@app.route("/deaths", methods=['GET'])
+def get_deaths():
+    for p in URL_PARAMS:
+        print(request.args.get(p))
+    return "", HTTPStatus.OK
+
+
+@app.route("/confirmed", methods=['GET'])
+def get_confirmed():
+    return "", HTTPStatus.OK
+
+
+@app.route("/active", methods=['GET'])
+def get_active():
+    return "", HTTPStatus.OK
+
+
+@app.route("/recovered", methods=['GET'])
+def get_recovered():
+    return "", HTTPStatus.OK
 
 
 if __name__ == "__main__":
