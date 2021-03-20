@@ -3,3 +3,4 @@ Werkzeug
 pandas
 pytest
 pytest-cov
+jsonpickle

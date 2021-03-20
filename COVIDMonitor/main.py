@@ -87,9 +87,9 @@ def upload():
             #         break
             # break
 
-    # for datetime in datamap:
-    #     for dp in datamap[datetime]:
-    #         print(dp)
+    for datetime in datamap:
+        for dp in datamap[datetime]:
+            print(dp)
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
 
