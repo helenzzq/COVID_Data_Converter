@@ -84,7 +84,6 @@ def upload():
     except:
         return "cannot parse data", HTTPStatus.INTERNAL_SERVER_ERROR
 
-    print(parsed_records['01-22-20'][0].combined_key)
     for datetime in parsed_records:
         for dp in parsed_records[datetime]:
             # print(dp)
@@ -216,7 +215,7 @@ def get_deaths():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return NO_RESULT_MESSAGE, HTTPStatus.NO_CONTENT
     else:
         out = OutputQuery()
         query_type = 'deaths'
@@ -244,7 +243,7 @@ def get_confirmed():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return NO_RESULT_MESSAGE, HTTPStatus.NO_CONTENT
     else:
         out = OutputQuery()
         query_type = 'confirmed'
@@ -272,7 +271,7 @@ def get_active():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return NO_RESULT_MESSAGE, HTTPStatus.NO_CONTENT
     else:
         out = OutputQuery()
         query_type = 'active'
@@ -300,7 +299,7 @@ def get_recovered():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return NO_RESULT_MESSAGE, HTTPStatus.NO_CONTENT
     else:
         out = OutputQuery()
         query_type = 'recovered'
