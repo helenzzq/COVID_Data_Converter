@@ -39,6 +39,7 @@ def main():
         path = os.path.join(UPLOAD_DIR, file)
         if os.path.isfile(path) or os.path.islink(path):
             os.unlink(path)
+
     return render_template('index.html')
 
 
@@ -86,13 +87,7 @@ def upload():
 
     for datetime in parsed_records:
         for dp in parsed_records[datetime]:
-            # print(dp)
             update(datamap, dp)
-            # for updated_dp in datamap[datetime]:
-            #     if updated_dp.country_region == dp.country_region and updated_dp.province_state == dp.province_state:
-            #         print("after update", updated_dp)
-            #         break
-            # break
 
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
