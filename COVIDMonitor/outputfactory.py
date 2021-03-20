@@ -1,6 +1,7 @@
-import numpy as np
 from .datapoint import DataPoint
+from .outputfactoryinterface import OutputFactoryInterface
 
+import numpy as np
 import jsonpickle
 
 jsonpickle.set_encoder_options('simplejson',
@@ -34,7 +35,7 @@ jsonpickle.handlers.registry.register(np.float32, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float64, NumpyFloatHandler)
 
 
-class OutputFactory:
+class OutputFactory(OutputFactoryInterface):
     """
     A class that output the data based on user query.
     Strategy pattern for outputing the following types of data:

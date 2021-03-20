@@ -3,6 +3,7 @@ from COVIDMonitor.main import app
 from COVIDMonitor.dataparser import DataParser
 from COVIDMonitor.datapoint import DataPoint
 from COVIDMonitor.outputfactory import OutputFactory
+from COVIDMonitor.outputfactoryinterface import OutputFactoryInterface
 
 import unittest
 import random
@@ -77,11 +78,16 @@ class TestOutputFactory(unittest.TestCase):
         self.outputAgent = OutputFactory()
         self.client = app.test_client()
         self.client.get('/')
+        self.interface = OutputFactoryInterface()
+        
+        
+        
 
     def test_output_json(self):
         """A unit test for testing output json file given List of Datapoint"""
         dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
                          0)]
+        self.interface.format_to_json('confirmed', dps)
         expected_result = "datetime,country_region,province_state,combined_key," \
                           "admin,confirmed\n01-01-20,US,Alaska,,,0"
         output = self.outputAgent.format_to_csv('confirmed', dps)
@@ -91,6 +97,7 @@ class TestOutputFactory(unittest.TestCase):
         """A unit test for testing output csv file given List of Datapoint"""
         dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
                          0)]
+        self.interface.format_to_csv('confirmed', dps)
         expected_result = "datetime,country_region,province_state,combined_key," \
                           "admin,confirmed\n01-01-20,US,Alaska,,,0"
         output = self.outputAgent.format_to_csv('confirmed', dps)
@@ -100,6 +107,7 @@ class TestOutputFactory(unittest.TestCase):
         """A unit test for testing output txt file given List of Datapoint"""
         dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
                          0)]
+        self.interface.format_to_txt('confirmed', dps)
         expected_result = "datetime,country_region,province_state,combined_key," \
                           "admin,confirmed\n01-01-20,US,Alaska,,,0"
         output = self.outputAgent.format_to_csv('confirmed', dps)
@@ -386,9 +394,9 @@ class TestParser(unittest.TestCase):
                          "Combined_Key Column should not be in US "
                          "Daily report data")
 
-
 class TestGetAPIs(unittest.TestCase):
-    """ A class that contains integration test for GET requests,
+    """ A class that contains integration test for GET requests and
+        outputfactory.
         Tests whether the returned query results are follows conditions
         specified in the query parameters.
     """
