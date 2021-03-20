@@ -96,10 +96,6 @@ class OutputQuery:
         if formats == 'json':
             output = jsonpickle.encode(data, unpicklable=False)
         else:
-            df = DataFrame.from_dict(data)
             if formats == 'csv':
                 output = DataFrame(data).to_csv(file_path)
-            elif formats == 'txt':
-                    output = df.to_csv(file_path, header=False, index=False,
-                                       sep=' ', mode='a')
         return output

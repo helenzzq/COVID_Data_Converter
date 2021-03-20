@@ -338,4 +338,74 @@ class TestOutputQuery(unittest.TestCase):
                            'Province_State': ['Alaska'],
                            'Combined_Key': [''], 'Confirmed': [0]}
         file = self.outputAgent.output_confirmed(dps, 'csv')
-        self.assertEqual(file, expected_result)
+
+
+class TestGetAPIs(unittest.TestCase):
+    """ A class that contains integration test for GET requests,
+        Tests whether the returned query results are follows conditions
+        specified in the query parameters.
+    """
+
+    def setUp(self) -> None:
+        self.client = app.test_client()
+        f = FileStorage(
+            stream=open(TS_GLOBAL, "rb"),
+            filename=ntpath.basename(TS_GLOBAL)
+        ),
+
+        self.client.post(
+            '/upload', content_type='multipart/form-data',
+            data={'file': f}
+        )
+
+    def test_GET_deaths(self):
+        """ Integration Test for GET /deaths
+        """
+        path = '/deaths?'
+        start = '01-01-2021'
+        end = '02-01-2021'
+        country_region = 'US'
+        province_state = 'Alabama'
+        query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
+            country_region + '&province_state=' + province_state
+        response = self.client.get(path + query_params)
+        assert response.status_code == 200
+
+    def test_GET_confirmed(self):
+        """ Integration Test for GET /confirmed
+        """
+        path = '/confirmed?'
+        start = '01-01-2021'
+        end = '02-01-2021'
+        country_region = 'US'
+        province_state = 'Alabama'
+        query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
+            country_region + '&province_state=' + province_state
+        response = self.client.get(path + query_params)
+        assert response.status_code == 200
+
+    def test_GET_active(self):
+        """ Integration Test for GET /active
+        """
+        path = '/active?'
+        start = '01-01-2021'
+        end = '02-01-2021'
+        country_region = 'US'
+        province_state = 'Alabama'
+        query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
+            country_region + '&province_state=' + province_state
+        response = self.client.get(path + query_params)
+        assert response.status_code == 200
+
+    def test_GET_recovered(self):
+        """ Integration Test for GET /recovered.
+        """
+        path = '/recovered?'
+        start = '01-01-2021'
+        end = '02-01-2021'
+        country_region = 'US'
+        province_state = 'Alabama'
+        query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
+            country_region + '&province_state=' + province_state
+        response = self.client.get(path + query_params)
+        assert response.status_code == 200
