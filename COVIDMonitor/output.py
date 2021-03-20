@@ -100,7 +100,6 @@ class OutputQuery:
                         self.combined_key, self.admin, self.confirmed))
 
         def to_csv(self) -> str:
-
             return ",".join(
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.confirmed)])
