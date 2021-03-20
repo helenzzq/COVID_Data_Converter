@@ -12,7 +12,7 @@ jsonpickle.set_decoder_options('simplejson',
 
 class NumpyFloatHandler(jsonpickle.handlers.BaseHandler):
     """
-    Automatic conversion of numpy float  to python floats
+    Automatic conversion of numpy float to python floats
     Required for jsonpickle to work correctly
     """
 
@@ -25,15 +25,15 @@ class NumpyFloatHandler(jsonpickle.handlers.BaseHandler):
 
 class NumpyIntHandler(jsonpickle.handlers.BaseHandler):
     """
+    Automatic conversion of numpy int to python int.
+    Required for jsonpickle to work correctly
     """
 
     def flatten(self, obj, data):
         return int(obj)
 
-
 # https://stackoverflow.com/questions/23793884/jsonpickle-encoding-floats-with-many-decimals-as-null
 jsonpickle.handlers.registry.register(np.int64, NumpyIntHandler)
-jsonpickle.handlers.registry.register(np.float, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float32, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float64, NumpyFloatHandler)
 
