@@ -1,14 +1,7 @@
-import json
-import os
-import random
-import string
-import jsonpickle
 from .datapoint import DataPoint
-from typing import List, Dict
-from pandas import DataFrame
 
-COL = ["Date", "Country_Region", "Province_State", "Combined_Key"]
-OUTPUT_DIR = 'COVIDMonitor/output'
+import jsonpickle
+from typing import List, Dict
 
 
 class OutputQuery:
@@ -33,72 +26,117 @@ class OutputQuery:
     def __init__(self):
         super().__init__()
 
-    @classmethod
-    def output_data(cls, query: List[DataPoint], data_type: str, formats: str) \
-            -> Dict[str, List]:
-        """Output the query data given specified format"""
-        col = []
-        col.extend(COL)
-        col.append(data_type)
-        result = dict()
-        for c in col:
-            result[c] = []
-        for dp in query:
+    def format_dp_list(self, query_type, dp_list):
+        if query_type == 'deaths':
+            return [OutputQuery.DeathDP(dp) for dp in dp_list]
+        if query_type == 'confirmed':
+            return [OutputQuery.ConfirmedDP(dp) for dp in dp_list]
+        elif query_type == 'recovered':
+            return [OutputQuery.RecoveredDP(dp) for dp in dp_list]
+        else:  # query_type == 'active':
+            return [OutputQuery.ActiveDP(dp) for dp in dp_list]
 
-            date = dp.datetime.split('-')
-            lst = [date[2], date[0], date[1]]
-            result["Date"].append('/'.join(lst))
-            result[col[1]].append(dp.country_region)
-            result[col[2]].append(dp.province_state)
-            result[col[3]].append(dp.combined_key)
-            result[data_type].append(dp.confirmed)
-        output = cls.format_switcher(formats, result, col)
-        return output
+    def format_to_json(self, query_type, dp_list) -> str:
+        dp_list = self.format_dp_list(query_type, dp_list)
+        return jsonpickle.encode(dp_list, unpicklable=False)
 
-    @classmethod
-    def output_confirmed(cls, query: List[DataPoint], formats: str) \
-            -> Dict[str, List]:
-        """Output Confirmed data in specified format"""
-        if formats == 'json':
-            return cls.format_switcher(formats, query, [])
-        else:
-            return cls.output_data(query, 'Confirmed', formats)
+    def format_to_txt(self, query_type, dp_list) -> str:
+        dp_list = self.format_dp_list(query_type, dp_list)
+        return "\n".join([str(dp) for dp in dp_list])
 
-    @classmethod
-    def output_death_data(cls, query: List[DataPoint], formats: str):
-        """Output deaths data in specified format"""
-        if formats == 'json':
-            return cls.format_switcher(formats, query, [])
-        return cls.output_data(query, 'Deaths', formats)
+    def format_to_csv(self, query_type, dp_list) -> str:
+        dp_list = self.format_dp_list(query_type, dp_list)
+        attribute_line = ",".join(
+            ["datetime",
+             "country_region",
+             "province_state",
+             "combined_key",
+             "admin",
+             query_type]
+        ) + "\n"
+        return attribute_line + "\n".join([dp.to_csv() for dp in dp_list])
 
-    @classmethod
-    def output_active_data(cls, query: List[DataPoint], formats: str):
-        """Output active data in specified format"""
-        if formats == 'json':
-            return cls.format_switcher(formats, query, [])
-        return cls.output_data(query, 'Active', formats)
+    class RawDP:
+        """
+        Degenerated datapoint with no count at all
+        """
 
-    @classmethod
-    def output_recovered_data(cls, query: List[DataPoint], formats: str):
-        """Output recovered data"""
-        if formats == 'json':
-            return cls.format_switcher(formats, query, [])
-        return cls.output_data(query, 'Recovered', formats)
+        def __init__(self, dp: DataPoint) -> None:
+            self.datetime = dp.datetime
+            self.country_region = dp.country_region
+            self.province_state = dp.province_state
+            self.combined_key = dp.combined_key
+            self.admin = dp.admin
 
-    @classmethod
-    def format_switcher(cls, formats: str, data: Dict or List[DataPoint],
-                        col: List[str]):
-        """Convert data to specified format"""
-        output = None
-        if not os.path.exists(OUTPUT_DIR):
-            os.makedirs(OUTPUT_DIR)
-        letters = string.ascii_lowercase
-        random_str = ''.join(random.choice(letters) for _ in range(3))
-        file_path = OUTPUT_DIR + '/output_' + random_str + '.' + formats
+    class DeathDP(RawDP):
+        """
+        Degenerated datapoint with only death count
+        """
 
-        if formats == 'json':
-            output = jsonpickle.encode(data, unpicklable=False)
-        else:
-            if formats == 'csv':
-                output = DataFrame(data).to_csv(file_path)
-        return output
+        def __init__(self, dp: DataPoint) -> None:
+            super().__init__(dp)
+            self.deaths = dp.deaths
+
+        def __str__(self) -> str:
+            return str((self.datetime, self.country_region, self.province_state,
+                        self.combined_key, self.admin, self.deaths))
+
+        def to_csv(self) -> str:
+            return ",".join(
+                [self.datetime, self.country_region, self.province_state,
+                 self.combined_key, self.admin, str(self.deaths)])
+
+    class ConfirmedDP(RawDP):
+        """
+        Degenerated datapoint with only Confirmed count
+        """
+
+        def __init__(self, dp: DataPoint) -> None:
+            super().__init__(dp)
+            self.confirmed = dp.confirmed
+
+        def __str__(self) -> str:
+            return str((self.datetime, self.country_region, self.province_state,
+                        self.combined_key, self.admin, self.confirmed))
+
+        def to_csv(self) -> str:
+
+            return ",".join(
+                [self.datetime, self.country_region, self.province_state,
+                 self.combined_key, self.admin, str(self.confirmed)])
+
+    class ActiveDP(RawDP):
+        """
+        Degenerated datapoint with only Active count
+        """
+
+        def __init__(self, dp: DataPoint) -> None:
+            super().__init__(dp)
+            self.active = dp.active
+
+        def __str__(self) -> str:
+            return str((self.datetime, self.country_region, self.province_state,
+                        self.combined_key, self.admin, self.active))
+
+        def to_csv(self) -> str:
+            return ",".join(
+                [self.datetime, self.country_region, self.province_state,
+                 self.combined_key, self.admin, str(self.active)])
+
+    class RecoveredDP(RawDP):
+        """
+        Degenerated datapoint with only Recovered count
+        """
+
+        def __init__(self, dp: DataPoint) -> None:
+            super().__init__(dp)
+            self.recovered = dp.recovered
+
+        def __str__(self) -> str:
+            return str((self.datetime, self.country_region, self.province_state,
+                        self.combined_key, self.admin, self.recovered))
+
+        def to_csv(self) -> str:
+            return ",".join(
+                [self.datetime, self.country_region, self.province_state,
+                 self.combined_key, self.admin, str(self.recovered)])

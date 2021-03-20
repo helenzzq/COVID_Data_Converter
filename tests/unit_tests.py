@@ -334,10 +334,10 @@ class TestOutputQuery(unittest.TestCase):
     def test_output_json(self):
         dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
                          0)]
-        expected_result = {'Date': ['01-01-20'], 'Country_Region': ['US'],
-                           'Province_State': ['Alaska'],
-                           'Combined_Key': [''], 'Confirmed': [0]}
-        file = self.outputAgent.output_confirmed(dps, 'csv')
+        expected_result = "datetime,country_region,province_state,combined_key," \
+                          "admin,confirmed\n01-01-20,US,Alaska,,,0"
+        output = self.outputAgent.format_to_csv('confirmed', dps)
+        assert output == expected_result
 
 
 class TestGetAPIs(unittest.TestCase):

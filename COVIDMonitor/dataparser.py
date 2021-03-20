@@ -101,8 +101,11 @@ class DataParser:
                 check_data_catego(dp, csv_name, data[i], is_us)
 
                 if is_us:
+                    combined = '' if pd.isna(
+                        covid_data[COMBINED_KEY][i]) else covid_data[COMBINED_KEY][i]
                     admin = '' if pd.isna(
                         covid_data[ADMIN][i]) else covid_data[ADMIN][i]
+                    dp.set_combined_key(combined)
                     dp.set_admin(admin)
                 hash_map[new_date].append(dp)
         return hash_map

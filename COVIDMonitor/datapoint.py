@@ -4,13 +4,13 @@ class DataPoint:
     === Private Attributes ===
     datetime: str
       The datetime this datapoint is created.
-    
+
     country_region: str
       Country/Region of this data.
-    
+
     province_state: str
       Province/State of this data.
-    
+
     combined_key: str
       Combines province_state and country_region.
       Format: "[province_state, ]<country_region>"
@@ -20,10 +20,10 @@ class DataPoint:
 
     active: int
       Active cases.
-    
+
     confirmed: int
       Active cases.
-    
+
     deaths: int
       Death cases.
 
@@ -41,16 +41,16 @@ class DataPoint:
     recovered: int
 
     def __init__(self,
-            datetime="",
-            country_region="",
-            province_state="",
-            combined_key="",
-            admin="",
-            active=-1,
-            confirmed=-1,
-            deaths=-1,
-            recovered=-1,
-    ) -> None:
+                 datetime="",
+                 country_region="",
+                 province_state="",
+                 combined_key="",
+                 admin="",
+                 active=-1,
+                 confirmed=-1,
+                 deaths=-1,
+                 recovered=-1,
+                 ) -> None:
         self.datetime = datetime
         self.country_region = country_region
         self.province_state = province_state
@@ -74,15 +74,16 @@ class DataPoint:
         self.active = active
 
     def set_combined_key(self, combined_key):
-        self.combined_key = combined_key
+        self.combined_key = str(combined_key)
 
     def set_admin(self, admin):
         self.admin = admin
 
     def __str__(self) -> str:
-            tup = (
-                self.datetime,
-                self.country_region, self.province_state, self.admin, self.combined_key, 
-                self.active, self.confirmed, self.deaths, self.recovered
-                )
-            return str(tup)
+        tup = (
+            self.datetime,
+            self.country_region, self.province_state, self.admin,
+            self.combined_key,
+            self.active, self.confirmed, self.deaths, self.recovered
+        )
+        return str(tup)
