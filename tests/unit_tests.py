@@ -2,7 +2,8 @@ from werkzeug.datastructures import FileStorage
 from COVIDMonitor.main import app
 from COVIDMonitor.dataparser import DataParser
 from COVIDMonitor.datapoint import DataPoint
-from COVIDMonitor.output import OutputQuery
+from COVIDMonitor.outputfactory import OutputFactory
+
 import unittest
 import random
 import os
@@ -69,11 +70,11 @@ class TestUpload(unittest.TestCase):
         assert response.status_code == 400
 
 
-class TestOutputQuery(unittest.TestCase):
+class TestOutputFactory(unittest.TestCase):
     """Test Output Query"""
 
     def setUp(self) -> None:
-        self.outputAgent = OutputQuery()
+        self.outputAgent = OutputFactory()
         self.client = app.test_client()
         self.client.get('/')
 

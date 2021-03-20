@@ -38,7 +38,7 @@ jsonpickle.handlers.registry.register(np.float32, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float64, NumpyFloatHandler)
 
 
-class OutputQuery:
+class OutputFactory:
     """
     A class that output the data based on user query.
     Strategy pattern for outputing the following types of data:
@@ -62,13 +62,13 @@ class OutputQuery:
 
     def format_dp_list(self, query_type, dp_list):
         if query_type == 'deaths':
-            return [OutputQuery.DeathDP(dp) for dp in dp_list]
+            return [OutputFactory.DeathDP(dp) for dp in dp_list]
         if query_type == 'confirmed':
-            return [OutputQuery.ConfirmedDP(dp) for dp in dp_list]
+            return [OutputFactory.ConfirmedDP(dp) for dp in dp_list]
         elif query_type == 'recovered':
-            return [OutputQuery.RecoveredDP(dp) for dp in dp_list]
+            return [OutputFactory.RecoveredDP(dp) for dp in dp_list]
         else:  # query_type == 'active':
-            return [OutputQuery.ActiveDP(dp) for dp in dp_list]
+            return [OutputFactory.ActiveDP(dp) for dp in dp_list]
 
     def format_to_json(self, query_type, dp_list) -> str:
         dp_list = self.format_dp_list(query_type, dp_list)
