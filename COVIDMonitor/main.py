@@ -86,16 +86,7 @@ def upload():
 
     for datetime in parsed_records:
         for dp in parsed_records[datetime]:
-            # print(dp)
             update(datamap, dp)
-            # for updated_dp in datamap[datetime]:
-            #     if updated_dp.country_region == dp.country_region and updated_dp.province_state == dp.province_state:
-            #         print("after update", updated_dp)
-            #         break
-            # break
-    for datetime in datamap:
-        for dp in datamap[datetime]:
-            print(dp)
 
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
@@ -104,7 +95,6 @@ def update(datamap: Dict[str, List[DataPoint]], dp: DataPoint) -> None:
     if not dp.datetime:
         return
     if dp.country_region == dp.province_state:
-        print("repeated", dp)
         return
 
     # same_day_recs = datamap.setdefault(dp.datetime, [])
@@ -133,9 +123,9 @@ def update(datamap: Dict[str, List[DataPoint]], dp: DataPoint) -> None:
 Return whether date is in between start and end
 """
 def is_between_two_dates(start, date, end) -> bool:
-    # format into [MM, DD, YYYY], split empty string will result ['']
+    # format into [MM, DD, YY], split empty string will result ['']
     start, date, end = start.split("-"), date.split("-"), end.split("-")
-    # format into [YYYY, DD, MM]
+    # format into [YY, DD, MM]
     start = [start[-1]] + start[:-1]
     date = [date[-1]] + date[:-1]
     end = [end[-1]] + end[:-1]
@@ -201,7 +191,7 @@ def get_deaths():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.NO_CONTENT
+        return jsonify({'message': NO_RESULT_MESSAGE}), HTTPStatus.NOT_FOUND
     else:
         out = OutputFactory()
         query_type = 'deaths'
@@ -227,7 +217,7 @@ def get_confirmed():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return jsonify({'message': NO_RESULT_MESSAGE}), HTTPStatus.NOT_FOUND
     else:
         out = OutputFactory()
         query_type = 'confirmed'
@@ -254,7 +244,7 @@ def get_active():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return jsonify({'message': NO_RESULT_MESSAGE}), HTTPStatus.NOT_FOUND
     else:
         out = OutputFactory()
         query_type = 'active'
@@ -281,7 +271,7 @@ def get_recovered():
     dp_list = get_query_results(request.args)
     output_format = request.args.get(URL_OUTPUT_FORMAT_PARAM, '')
     if not dp_list:
-        return NO_RESULT_MESSAGE, HTTPStatus.OK
+        return jsonify({'message': NO_RESULT_MESSAGE}), HTTPStatus.NOT_FOUND
     else:
         out = OutputFactory()
         query_type = 'recovered'
