@@ -108,8 +108,36 @@ Get COVID confirmed case records that satisfies the conditions specified in URL 
 Get COVID active case records that satisfies the conditions specified in URL parameters. By default, if no URL parameters are given, all active count entries will be returned.
 
 ## Paired Programming 
-We applied paired programming in both parsing data and 
-## Code Craftsmanship
+In this assignment, we design the solutions the solution together and paired programmed for most of the features. In the initial meeting, we discuss possible features and decide on a subset of tasks to implement.
 
+### Feature Breakdown
+We implement mainly 4 features in the assignment:
+- Upload file
+  - Front-End UI (Qi Zhu)
+  - Routing  (Jefferson Zhong , Qi Zhu)
+  - Exception Handle (Jefferson Zhong)
+- Parsing Data(Jefferson Zhong,Qi Zhu)
+  - DataParser Structure (Jefferson Zhong)
+  - DataParser Routing (Jefferson Zhong)
+  - DataParser Implementation: (Qi Zhu)
+  - DataParser Testing:(Qi Zhu)
+- Query Data & Routing (Paired Programmed)
+  - Driver:(Jefferson Zhong)
+  - Navigator: Qi Zhu
+- Output Query & Routing(Paired Programmed)
+  - Driver: Qi Zhu
+  - Navigator: Jefferson Zhong
+### Paired Programming  Reflection
+We strictly followed the paired programming requirement in implementing the last two features:1. Query Data & Routing; 2. Output Query & Routing.
+
+We set up an approximate 2 hours limit for each feature. 
+Indeed, paired programming profoundly enhanced the efficiency of coding and debugging.  For example, since the feature 'Output Query' is tightly related to Output Query, playing as the navigator of the querying data helped the driver of implementing the next feature in understanding the code more thoroughly.  Additionally, while playing as the navigator for the second feature,  the driver for the first feature, Jefferson, can quickly identify the source of the bug that is caused by his previous implementation.  Switching roles in paired programming contributes to that.
+
+However, paired programming is a bit challenging for teams like us that live in different time zone. It's a little bit hard for us to meet for a long time. We can only break our implementation into several steps and then meet several times to complete a feature. So the gap between the commits in the last feature is a little bit longer compared to other branches.
+
+
+
+
+## Code Craftsmanship
 We use VS code built-in python extension IDE pack to format our code.
 For paired coding, we use Live share extension in VS code so that we can code at the same time and any live changes will be reflected on both ends.
