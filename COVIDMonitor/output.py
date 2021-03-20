@@ -44,7 +44,10 @@ class OutputQuery:
         for c in col:
             result[c] = []
         for dp in query:
-            result["Date"].append(dp.datetime)
+
+            date = dp.datetime.split('-')
+            lst = [date[2], date[0], date[1]]
+            result["Date"].append('/'.join(lst))
             result[col[1]].append(dp.country_region)
             result[col[2]].append(dp.province_state)
             result[col[3]].append(dp.combined_key)
