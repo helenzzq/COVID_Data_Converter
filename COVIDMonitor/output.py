@@ -1,7 +1,41 @@
+from typing import List, Dict
+import numpy as np
 from .datapoint import DataPoint
 
 import jsonpickle
-from typing import List, Dict
+
+jsonpickle.set_encoder_options('simplejson',
+                               use_decimal=True)
+jsonpickle.set_decoder_options('simplejson',
+                               use_decimal=True)
+
+
+class NumpyFloatHandler(jsonpickle.handlers.BaseHandler):
+    """
+    Automatic conversion of numpy float  to python floats
+    Required for jsonpickle to work correctly
+    """
+
+    def flatten(self, obj, data):
+        """
+        Converts and rounds a Numpy.float* to Python float
+        """
+        return round(obj, 6)
+
+
+class NumpyIntHandler(jsonpickle.handlers.BaseHandler):
+    """
+    """
+
+    def flatten(self, obj, data):
+        return int(obj)
+
+
+# https://stackoverflow.com/questions/23793884/jsonpickle-encoding-floats-with-many-decimals-as-null
+jsonpickle.handlers.registry.register(np.int64, NumpyIntHandler)
+jsonpickle.handlers.registry.register(np.float, NumpyFloatHandler)
+jsonpickle.handlers.registry.register(np.float32, NumpyFloatHandler)
+jsonpickle.handlers.registry.register(np.float64, NumpyFloatHandler)
 
 
 class OutputQuery:
@@ -38,7 +72,7 @@ class OutputQuery:
 
     def format_to_json(self, query_type, dp_list) -> str:
         dp_list = self.format_dp_list(query_type, dp_list)
-        return jsonpickle.encode(dp_list, unpicklable=False)
+        return jsonpickle.encode(dp_list, unpicklable=False, use_decimal=True)
 
     def format_to_txt(self, query_type, dp_list) -> str:
         dp_list = self.format_dp_list(query_type, dp_list)
