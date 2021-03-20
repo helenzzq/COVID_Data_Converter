@@ -1,4 +1,4 @@
-# Assignment 2 Starter Template
+# Assignment 2 
 
 ## Getting Started
 
@@ -16,14 +16,16 @@ pip install -r requirements.txt
 
 ### Data constraints
 - Must specify date in "MM-DD-YY"
-- If timeseries data, must contain "time_series" in filename
+- Please upload the data as the specified format given by the handout.
+- If you want to upload time series data, must contain "time_series" in filename
 
 ### Running The Code
 
 You can start by running main.py, which is in the folder COVIDMonitor. main.py has the main method that will start the program.
+Please run the above bash command when you are in the parent folder: assignment-2-3-imjeffz-helenzzq.
 
 ```bash
-python3 -m COVIDMonitor.main.py
+python3 -m COVIDMonitor.main
 ```
 
 ## Running Tests
@@ -36,9 +38,6 @@ To run unit tests with coverage, run the following command:
 pytest --cov-report term --cov=COVIDMonitor tests/unit_tests.py
 ```
 
-## Assignment Instructions
-
-Assignment instructions can be found here: https://drive.google.com/file/d/1CX_c29slK1TyUvEOiolSzuugnRGCRp8A/view?usp=sharing
 
 ## Code Crafstmanship
 We use VS code built-in python extension IDE pack to format our code.
