@@ -10,12 +10,15 @@ import ntpath
 
 # Path of csv data
 UPLOAD_DIR = "COVIDMonitor/data"
-# INVALID_CSV = "tests/test_data/invalid_data.csv"
+INVALID_CSV = "tests/test_data/invalid_data.csv"
 TXT = "tests/test_data/test_upload_txt"
 TS_GLOBAL = "tests/test_data/time_series_covid19_confirmed_global.csv"
 TS_US = "tests/test_data/time_series_covid19_deaths_US.csv"
 DR_GLOBAL = "tests/test_data/01-01-2021.csv"
 DR_US = "tests/test_data/01-02-2021.csv"
+
+if not os.path.exists(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
 
 
 def mock_file_upload(path):
@@ -66,6 +69,61 @@ class TestUpload(unittest.TestCase):
         assert response.status_code == 400
 
 
+class TestOutputQuery(unittest.TestCase):
+    """Test Output Query"""
+
+    def setUp(self) -> None:
+        self.outputAgent = OutputQuery()
+        self.client = app.test_client()
+        self.client.get('/')
+
+    def test_output_json(self):
+        """A unit test for testing output json file given List of Datapoint"""
+        dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
+                         0)]
+        expected_result = "datetime,country_region,province_state,combined_key," \
+                          "admin,confirmed\n01-01-20,US,Alaska,,,0"
+        output = self.outputAgent.format_to_csv('confirmed', dps)
+        assert output == expected_result
+
+    def test_output_csv(self):
+        """A unit test for testing output csv file given List of Datapoint"""
+        dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
+                         0)]
+        expected_result = "datetime,country_region,province_state,combined_key," \
+                          "admin,confirmed\n01-01-20,US,Alaska,,,0"
+        output = self.outputAgent.format_to_csv('confirmed', dps)
+        assert output == expected_result
+
+    def test_output_txt(self):
+        """A unit test for testing output txt file given List of Datapoint"""
+        dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
+                         0)]
+        expected_result = "datetime,country_region,province_state,combined_key," \
+                          "admin,confirmed\n01-01-20,US,Alaska,,,0"
+        output = self.outputAgent.format_to_csv('confirmed', dps)
+        assert output == expected_result
+
+    def test_output_uploaded_data(self):
+        """Integration Test for output Uploaded Data"""
+        res = mock_file_upload(DR_US)
+        assert res.status_code == 201
+        response = app.test_client().get('/deaths?output=json')
+        expected = [{"datetime": "01-02-21", "country_region": "US",
+                     "province_state": "Alabama", "combined_key": "",
+                     "admin": "", "deaths": 4872},
+                    {"datetime": "01-02-21", "country_region": "US",
+                     "province_state": "Alaska", "combined_key": "",
+                     "admin": "", "deaths": 215},
+                    {"datetime": "01-02-21", "country_region": "US",
+                     "province_state": "American Samoa", "combined_key": "",
+                     "admin": "", "deaths": 0}]
+        self.assertEqual(response.json, expected)
+        path = os.path.join("COVIDMonitor/data", ntpath.basename(DR_US))
+        os.unlink(path)
+        assert response.status_code == 200
+
+
 class TestParseInMain(unittest.TestCase):
     """ A class that contains integration test for parsing data"""
 
@@ -76,12 +134,13 @@ class TestParseInMain(unittest.TestCase):
         an csv that is not a COVID19 report
         The response code should be INTERNAL_SERVER_ERROR 500
         """
-        # response = mock_file_upload(INVALID_CSV)
-        # path = os.path.join("COVIDMonitor/data", ntpath.basename(INVALID_CSV))
-        # # Valid csv data can be saved
-        # self.assertTrue(os.path.exists(path))
-        # # Invalid Report cannot be parsed, report error code 500
-        # assert response.status_code == 500
+        response = mock_file_upload(INVALID_CSV)
+        path = os.path.join("COVIDMonitor/data", ntpath.basename(INVALID_CSV))
+        # Valid csv data can be saved
+        self.assertTrue(os.path.exists(path))
+        os.unlink(path)
+        # Invalid Report cannot be parsed, report error code 500
+        assert response.status_code == 500
 
     def test_upload_parse_covid_report(self):
         """
@@ -94,6 +153,8 @@ class TestParseInMain(unittest.TestCase):
         path = os.path.join("COVIDMonitor/data", ntpath.basename(TS_GLOBAL))
         # Test if uploaded file is stored in local dir
         self.assertTrue(os.path.exists(path))
+        os.unlink(path)
+        self.assertFalse(os.path.exists(path))
         # Test if uploaded file is a valid COVID 19 report that can be parsed
         assert response.status_code == 201
 
@@ -325,21 +386,6 @@ class TestParser(unittest.TestCase):
                          "Daily report data")
 
 
-class TestOutputQuery(unittest.TestCase):
-    """Test Output Query"""
-
-    def setUp(self) -> None:
-        self.outputAgent = OutputQuery()
-
-    def test_output_json(self):
-        dps = [DataPoint('01-01-20', 'US', 'Alaska', '', '', 0, 0, 0,
-                         0)]
-        expected_result = "datetime,country_region,province_state,combined_key," \
-                          "admin,confirmed\n01-01-20,US,Alaska,,,0"
-        output = self.outputAgent.format_to_csv('confirmed', dps)
-        assert output == expected_result
-
-
 class TestGetAPIs(unittest.TestCase):
     """ A class that contains integration test for GET requests,
         Tests whether the returned query results are follows conditions
@@ -361,13 +407,14 @@ class TestGetAPIs(unittest.TestCase):
     def test_GET_deaths(self):
         """ Integration Test for GET /deaths
         """
+
         path = '/deaths?'
-        start = '01-01-2021'
-        end = '02-01-2021'
+        start = '01-01-21'
+        end = '02-01-21'
         country_region = 'US'
         province_state = 'Alabama'
         query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
-            country_region + '&province_state=' + province_state
+                       country_region + '&province_state=' + province_state
         response = self.client.get(path + query_params)
         assert response.status_code == 200
 
@@ -375,12 +422,12 @@ class TestGetAPIs(unittest.TestCase):
         """ Integration Test for GET /confirmed
         """
         path = '/confirmed?'
-        start = '01-01-2021'
-        end = '02-01-2021'
+        start = '01-01-21'
+        end = '02-01-21'
         country_region = 'US'
         province_state = 'Alabama'
         query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
-            country_region + '&province_state=' + province_state
+                       country_region + '&province_state=' + province_state
         response = self.client.get(path + query_params)
         assert response.status_code == 200
 
@@ -388,12 +435,12 @@ class TestGetAPIs(unittest.TestCase):
         """ Integration Test for GET /active
         """
         path = '/active?'
-        start = '01-01-2021'
-        end = '02-01-2021'
+        start = '01-01-21'
+        end = '02-01-21'
         country_region = 'US'
         province_state = 'Alabama'
         query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
-            country_region + '&province_state=' + province_state
+                       country_region + '&province_state=' + province_state
         response = self.client.get(path + query_params)
         assert response.status_code == 200
 
@@ -401,11 +448,13 @@ class TestGetAPIs(unittest.TestCase):
         """ Integration Test for GET /recovered.
         """
         path = '/recovered?'
-        start = '01-01-2021'
-        end = '02-01-2021'
+        start = '01-01-21'
+        end = '02-01-21'
         country_region = 'US'
         province_state = 'Alabama'
         query_params = 'start=' + start + '&end=' + end + '&country_region=' + \
-            country_region + '&province_state=' + province_state
+                       country_region + '&province_state=' + province_state
         response = self.client.get(path + query_params)
+        path = os.path.join("COVIDMonitor/data", ntpath.basename(TS_GLOBAL))
+        os.unlink(path)
         assert response.status_code == 200
