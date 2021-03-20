@@ -46,12 +46,13 @@ endpoint: *localhost:5000*
 ```bash
 curl http://localhost:5000/deaths?start=01-09-20&end=01-10-2021&country_region=us&province_state=wyoming&output=json
 ```
+Representing the query that looks for death case records between 2020/01/09
 
 ### URL parameters
 
 - `start`
 
-  The start date of the query.
+  The start date of the query in MM-DD-YY format.
 
   - If `start` is specified without `end`, then the query returns all possible entries with datetime equal to or after `start`.  
 
@@ -59,7 +60,7 @@ curl http://localhost:5000/deaths?start=01-09-20&end=01-10-2021&country_region=u
 
 - `end`
 
-  The end date of the query.
+  The end date of the query in MM-DD-YY format.
 
   - If `end` is specified without `start`, then the query returns all possible entries with datetime equal or prior to `end`.
 
@@ -127,6 +128,8 @@ We implement mainly 4 features in the assignment:
 - Output Query & Routing(Paired Programmed)
   - Driver: Qi Zhu
   - Navigator: Jefferson Zhong
+
+
 ### Paired Programming  Reflection
 We strictly followed the paired programming requirement in implementing the last two features:1. Query Data & Routing; 2. Output Query & Routing.
 
