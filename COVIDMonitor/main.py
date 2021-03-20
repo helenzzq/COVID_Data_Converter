@@ -76,9 +76,9 @@ def upload():
         for dp in parsed_records[datetime]:
             update(datamap, dp)
 
-    # for datetime in datamap:
-    #     for dp in datamap[datetime]:
-    #         print(dp)
+    for datetime in datamap:
+        for dp in datamap[datetime]:
+            print(dp)
     flash("File is uploaded successfully")
     return render_template('index.html'), HTTPStatus.CREATED
 

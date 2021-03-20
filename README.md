@@ -20,10 +20,7 @@ pip install -r requirements.txt
 - If you want to upload time series data, must contain "time_series" in filename
 
 ### Running The Code
-
-You can start by running main.py, which is in the folder COVIDMonitor. main.py has the main method that will start the program.
-Please run the above bash command when you are in the parent folder: assignment-2-3-imjeffz-helenzzq.
-
+To start the program,please run the bash command when you are in the parent folder: assignment-2-3-imjeffz-helenzzq.
 ```bash
 python3 -m COVIDMonitor.main
 ```
@@ -39,6 +36,9 @@ pytest --cov-report term --cov=COVIDMonitor tests/unit_tests.py
 ```
 
 
+## Paired Programming 
+We applied paired programming in both parsing data and 
 ## Code Crafstmanship
+
 We use VS code built-in python extension IDE pack to format our code.
 For paired coding, we use Live share extension in VS code so that we can code at the same time and any live changes will be reflected on both ends.
