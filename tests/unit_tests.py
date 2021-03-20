@@ -408,7 +408,6 @@ class TestGetAPIs(unittest.TestCase):
     def test_GET_deaths(self):
         """ Integration Test for GET /deaths
         """
-
         path = '/deaths?'
         start = '01-01-21'
         end = '02-01-21'

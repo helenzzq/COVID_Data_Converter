@@ -1,11 +1,10 @@
-from werkzeug.datastructures import Headers
 from .datapoint import DataPoint
 from .dataparser import DataParser
 from .outputfactory import OutputFactory
 
 import os
-from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
-from werkzeug.utils import redirect, secure_filename
+from flask import Flask, request, render_template, flash, jsonify
+from werkzeug.utils import secure_filename
 from http import HTTPStatus
 from typing import List, Dict
 
@@ -186,6 +185,7 @@ def get_query_results(args):
                     result_datapoints.append(dp)
     return result_datapoints
 
+
 @app.route("/deaths", methods=['GET'])
 def get_deaths():
     dp_list = get_query_results(request.args)
@@ -211,6 +211,7 @@ def get_deaths():
                 response = out.format_to_txt(query_type, dp_list),
                 mimetype = 'text/plain'
             ), HTTPStatus.OK
+
 
 @app.route("/confirmed", methods=['GET'])
 def get_confirmed():
