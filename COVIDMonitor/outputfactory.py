@@ -1,4 +1,3 @@
-from typing import List, Dict
 import numpy as np
 from .datapoint import DataPoint
 
@@ -15,20 +14,17 @@ class NumpyFloatHandler(jsonpickle.handlers.BaseHandler):
     Automatic conversion of numpy float to python floats
     Required for jsonpickle to work correctly
     """
-
     def flatten(self, obj, data):
         """
         Converts and rounds a Numpy.float* to Python float
         """
         return round(obj, 6)
 
-
 class NumpyIntHandler(jsonpickle.handlers.BaseHandler):
     """
     Automatic conversion of numpy int to python int.
     Required for jsonpickle to work correctly
     """
-
     def flatten(self, obj, data):
         return int(obj)
 
@@ -90,9 +86,9 @@ class OutputFactory:
         ) + "\n"
         return attribute_line + "\n".join([dp.to_csv() for dp in dp_list])
 
-    class RawDP:
+    class RawDPInterface:
         """
-        Degenerated datapoint with no count at all
+        Degenerated datapoint interface with no count at all
         """
 
         def __init__(self, dp: DataPoint) -> None:
@@ -101,8 +97,14 @@ class OutputFactory:
             self.province_state = dp.province_state
             self.combined_key = dp.combined_key
             self.admin = dp.admin
+        
+        def __str__(self) -> str:
+            pass
+        
+        def to_csv(self) -> str:
+            pass
 
-    class DeathDP(RawDP):
+    class DeathDP(RawDPInterface):
         """
         Degenerated datapoint with only death count
         """
@@ -120,7 +122,7 @@ class OutputFactory:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.deaths)])
 
-    class ConfirmedDP(RawDP):
+    class ConfirmedDP(RawDPInterface):
         """
         Degenerated datapoint with only Confirmed count
         """
@@ -138,7 +140,7 @@ class OutputFactory:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.confirmed)])
 
-    class ActiveDP(RawDP):
+    class ActiveDP(RawDPInterface):
         """
         Degenerated datapoint with only Active count
         """
@@ -156,7 +158,7 @@ class OutputFactory:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.active)])
 
-    class RecoveredDP(RawDP):
+    class RecoveredDP(RawDPInterface):
         """
         Degenerated datapoint with only Recovered count
         """
