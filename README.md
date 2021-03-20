@@ -89,7 +89,7 @@ curl http://localhost:5000/deaths?start=01-09-20&end=01-10-2021&country_region=u
   
 ### API
 
-Before sending a query, one must use a browser to visit `http://localhost:5000` to upload at least one data file from the [JHU CSSE COVID-19 Dataset](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data), otherwise there will be no existing data to query, and a status code `204` along with the message "*Either no data file has been uploaded or query has no match found*" will be returned.
+Before sending a query, one must use a browser to visit `http://localhost:5000` to upload at least one data file from the [JHU CSSE COVID-19 Dataset](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data), otherwise there will be no existing data to query, and a status code `404` along with the message "*Either no data file has been uploaded or query has no match found*" will be returned.
 
 #### GET /deaths
 
