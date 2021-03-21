@@ -53,6 +53,7 @@ pip install -r requirements.txt
 ### Running the Code
 
 To start the program, please run the bash command when you are in the *root project directory*.
+Note that since the file is very large, so it may take up to 15s to upload the data.
 
 ```bash
 python3 -m COVIDMonitor.main
@@ -125,7 +126,8 @@ Before sending a query, one must use a browser to visit `http://localhost:5000` 
 
 #### `POST` /upload
 
-// TODO
+POST data that user upload and save the file in local path: COVIDMonitor/data. 
+This API is triggered when using the upload button to upload file in the browser.
 
 #### `GET` /deaths
 
