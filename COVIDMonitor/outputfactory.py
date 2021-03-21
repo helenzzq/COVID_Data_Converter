@@ -1,7 +1,7 @@
-from typing import List, Dict
-import numpy as np
 from .datapoint import DataPoint
+from .outputfactoryinterface import OutputFactoryInterface
 
+import numpy as np
 import jsonpickle
 
 jsonpickle.set_encoder_options('simplejson',
@@ -12,33 +12,30 @@ jsonpickle.set_decoder_options('simplejson',
 
 class NumpyFloatHandler(jsonpickle.handlers.BaseHandler):
     """
-    Automatic conversion of numpy float  to python floats
+    Automatic conversion of numpy float to python floats
     Required for jsonpickle to work correctly
     """
-
     def flatten(self, obj, data):
         """
         Converts and rounds a Numpy.float* to Python float
         """
         return round(obj, 6)
 
-
 class NumpyIntHandler(jsonpickle.handlers.BaseHandler):
     """
+    Automatic conversion of numpy int to python int.
+    Required for jsonpickle to work correctly
     """
-
     def flatten(self, obj, data):
         return int(obj)
 
-
 # https://stackoverflow.com/questions/23793884/jsonpickle-encoding-floats-with-many-decimals-as-null
 jsonpickle.handlers.registry.register(np.int64, NumpyIntHandler)
-jsonpickle.handlers.registry.register(np.float, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float32, NumpyFloatHandler)
 jsonpickle.handlers.registry.register(np.float64, NumpyFloatHandler)
 
 
-class OutputQuery:
+class OutputFactory(OutputFactoryInterface):
     """
     A class that output the data based on user query.
     Strategy pattern for outputing the following types of data:
@@ -62,13 +59,13 @@ class OutputQuery:
 
     def format_dp_list(self, query_type, dp_list):
         if query_type == 'deaths':
-            return [OutputQuery.DeathDP(dp) for dp in dp_list]
+            return [OutputFactory.DeathDP(dp) for dp in dp_list]
         if query_type == 'confirmed':
-            return [OutputQuery.ConfirmedDP(dp) for dp in dp_list]
+            return [OutputFactory.ConfirmedDP(dp) for dp in dp_list]
         elif query_type == 'recovered':
-            return [OutputQuery.RecoveredDP(dp) for dp in dp_list]
+            return [OutputFactory.RecoveredDP(dp) for dp in dp_list]
         else:  # query_type == 'active':
-            return [OutputQuery.ActiveDP(dp) for dp in dp_list]
+            return [OutputFactory.ActiveDP(dp) for dp in dp_list]
 
     def format_to_json(self, query_type, dp_list) -> str:
         dp_list = self.format_dp_list(query_type, dp_list)
@@ -90,9 +87,9 @@ class OutputQuery:
         ) + "\n"
         return attribute_line + "\n".join([dp.to_csv() for dp in dp_list])
 
-    class RawDP:
+    class RawDPInterface:
         """
-        Degenerated datapoint with no count at all
+        Degenerated datapoint interface with no count at all
         """
 
         def __init__(self, dp: DataPoint) -> None:
@@ -101,8 +98,14 @@ class OutputQuery:
             self.province_state = dp.province_state
             self.combined_key = dp.combined_key
             self.admin = dp.admin
+        
+        def __str__(self) -> str:
+            pass
+        
+        def to_csv(self) -> str:
+            pass
 
-    class DeathDP(RawDP):
+    class DeathDP(RawDPInterface):
         """
         Degenerated datapoint with only death count
         """
@@ -120,7 +123,7 @@ class OutputQuery:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.deaths)])
 
-    class ConfirmedDP(RawDP):
+    class ConfirmedDP(RawDPInterface):
         """
         Degenerated datapoint with only Confirmed count
         """
@@ -138,7 +141,7 @@ class OutputQuery:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.confirmed)])
 
-    class ActiveDP(RawDP):
+    class ActiveDP(RawDPInterface):
         """
         Degenerated datapoint with only Active count
         """
@@ -156,7 +159,7 @@ class OutputQuery:
                 [self.datetime, self.country_region, self.province_state,
                  self.combined_key, self.admin, str(self.active)])
 
-    class RecoveredDP(RawDP):
+    class RecoveredDP(RawDPInterface):
         """
         Degenerated datapoint with only Recovered count
         """
