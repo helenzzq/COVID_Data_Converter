@@ -1,0 +1,32 @@
+Pair Programming (12/15 marks):
+The pair-programming process is explained in the Readme file. Some reflections were included in the report.
+It would be better to include more clear commit messages for pair programming. It is a bit hard to tell from commit history which commits were pair-programmed.
+
+
+
+Program design (19/20 marks)
+The report included some high-level design ideas and as well as some specific design patterns used. 
+The program design is good in general.
+
+
+Functionality (22/25 marks)
+The application is fully functional. The user can upload both time-series and daily report files and make queries.
+The returned results can either be in csv, json or txt format.
+
+
+Tests (20/20 marks)
+Very good unit test coverage (above 90%).
+
+
+
+Code Craftsmanship (8/10 marks)
+Code style looks good in general and some comments were provided for the code.
+Briefly mentioned tools/IDE used in the project.
+
+
+README.md explanation and organization (9/10 marks): 
+Good set of instructions are included in Readme file on how to install and run the application.
+
+
+Total: 12 + 19 + 22 + 20 + 8 + 9 = 90
+Final Mark: 15 * 90% = 13.5
