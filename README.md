@@ -1,4 +1,4 @@
-# CSC301 Assignment 2
+# Intro
 
 A RESTful API interface for the [JHU CSSE COVID-19 Dataset](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data). Users can query data and filter results by specifying URL parameters such as `start`, `end`, `country_region`, and `province_state`. 
 
@@ -6,10 +6,9 @@ Developed using `Flask`.
 
 ### Authors
 
-Jefferson Zhong (*imJeffZ*)
+Jefferson Zhong
 
-Qi Zhu (*helenzzq*)
-
+Helen Zhu
 
 
 ## Table of Contents
