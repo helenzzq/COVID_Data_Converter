@@ -12,7 +12,7 @@ Helen Zhu
 
 
 ## Table of Contents
-   * [CSC301 Assignment 2](#csc301-assignment-2)
+   * [Intro](#Intro)
          * [Authors](#authors)
       * [Install](#install)
          * [Prerequisites](#prerequisites)
